@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:user_github_borwita/presentation/blocs/detail_user/detail_user_bloc.dart';
 import 'package:user_github_borwita/presentation/blocs/search_user/search_user_bloc.dart';
 
 class PopularPageView extends StatelessWidget {
@@ -34,6 +35,17 @@ class PopularPageView extends StatelessWidget {
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(user.avatarUrl),
                   ),
+                  onTap: () {
+                    context.read<DetailUserBloc>().add(
+                          DetailUserFetchEvent(
+                            username: user.username,
+                          ),
+                        );
+                    Navigator.pushNamed(
+                      context,
+                      '/user_detail',
+                    );
+                  },
                 );
               },
             ),

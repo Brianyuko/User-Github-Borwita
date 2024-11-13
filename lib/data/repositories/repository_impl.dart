@@ -24,4 +24,20 @@ class RepositoryImpl implements Repository {
       return const Left(SSLFailure('Certificate verification failed'));
     }
   }
+
+  @override
+  Future<Either<Failure, UserEntity>> getDetailUser({
+    required String username,
+  }) async {
+    try {
+      final result = await remoteDataSource.getUserModel(username: username);
+      return Right(result.toEntity());
+    } on ServerException {
+      return const Left(ServerFailure('Failed to fetch data from the server'));
+    } on SocketException {
+      return const Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return const Left(SSLFailure('Certificate verification failed'));
+    }
+  }
 }
