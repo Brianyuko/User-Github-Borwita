@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:user_github_borwita/presentation/blocs/detail_user/detail_user_bloc.dart';
+import 'package:user_github_borwita/presentation/blocs/favorite/favorite_bloc.dart';
+import 'package:user_github_borwita/presentation/blocs/favorite_status/favorite_status_bloc.dart';
 
 class UserDetailPage extends StatelessWidget {
   const UserDetailPage({super.key});
@@ -11,12 +13,6 @@ class UserDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Detail User'),
         centerTitle: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: BlocBuilder<DetailUserBloc, DetailUserState>(
         builder: (context, state) {
@@ -71,6 +67,64 @@ class UserDetailPage extends StatelessWidget {
                                 ),
                               ],
                             ),
+                          ),
+                          const SizedBox(width: 16),
+                          BlocConsumer<FavoriteStatusBloc, FavoriteStatusState>(
+                            listenWhen: (previous, current) =>
+                                current.message != '',
+                            listener: (context, stateStatus) {
+                              final message = stateStatus.message;
+                              if (message ==
+                                      FavoriteStatusBloc.addSuccessMessage ||
+                                  message ==
+                                      FavoriteStatusBloc.removeSuccessMessage) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(message),
+                                  ),
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Text(message),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            builder: (context, stateStatus) {
+                              final isFavorite = context.select(
+                                  (FavoriteStatusBloc bloc) =>
+                                      bloc.state.status);
+                              return IconButton(
+                                icon: Icon(stateStatus.status
+                                    ? Icons.favorite
+                                    : Icons.favorite_border),
+                                onPressed: () async {
+                                  if (!isFavorite) {
+                                    context.read<FavoriteStatusBloc>().add(
+                                        AddToFavoritesEvent(user: state.user));
+                                  } else {
+                                    context.read<FavoriteStatusBloc>().add(
+                                        RemoveFromFavoritesEvent(
+                                            user: state.user));
+                                  }
+                                  context
+                                      .read<FavoriteBloc>()
+                                      .add(FavoriteFetchEvent());
+                                },
+                              );
+                            },
                           ),
                         ],
                       )

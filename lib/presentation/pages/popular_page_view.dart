@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:user_github_borwita/presentation/blocs/detail_user/detail_user_bloc.dart';
+import 'package:user_github_borwita/presentation/blocs/favorite_status/favorite_status_bloc.dart';
 import 'package:user_github_borwita/presentation/blocs/search_user/search_user_bloc.dart';
 
-class PopularPageView extends StatelessWidget {
+class PopularPageView extends StatefulWidget {
   const PopularPageView({super.key});
+
+  @override
+  State<PopularPageView> createState() => _PopularPageViewState();
+}
+
+class _PopularPageViewState extends State<PopularPageView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<SearchUserBloc>().add(PopularUsersFetchEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +51,11 @@ class PopularPageView extends StatelessWidget {
                     context.read<DetailUserBloc>().add(
                           DetailUserFetchEvent(
                             username: user.username,
+                          ),
+                        );
+                    context.read<FavoriteStatusBloc>().add(
+                          LoadFavoritesEvent(
+                            id: user.id,
                           ),
                         );
                     Navigator.pushNamed(

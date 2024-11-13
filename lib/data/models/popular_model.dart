@@ -28,6 +28,7 @@ class PopularModel extends Equatable {
 
   PopularEntity toEntity() {
     return PopularEntity(
+      id: id,
       username: login,
       avatarUrl: avatarUrl ?? "https://placehold.co/600x400",
       urlFull: url,
