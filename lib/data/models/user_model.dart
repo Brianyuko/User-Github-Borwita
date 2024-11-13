@@ -41,10 +41,43 @@ class UserModel extends Equatable {
     );
   }
 
+  factory UserModel.fromMap(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'],
+      login: json['username'],
+      avatarUrl: json['avatarUrl'],
+      url: json['url'],
+      type: json['type'],
+      name: json['name'],
+      company: json['company'],
+      email: json['email'],
+      followers: json['followers'],
+      following: json['following'],
+    );
+  }
+
+  //Create method From entity
+  factory UserModel.fromEntity(UserEntity entity) {
+    return UserModel(
+      id: entity.id,
+      login: entity.username,
+      avatarUrl: entity.avatarUrl,
+      url: entity.url,
+      type: entity.type,
+      name: entity.name,
+      company: entity.company,
+      email: entity.email,
+      followers: entity.followers,
+      following: entity.following,
+    );
+  }
+
   UserEntity toEntity() {
     return UserEntity(
       id: id,
       avatarUrl: avatarUrl ?? "https://placehold.co/600x400",
+      url: url,
+      type: type,
       username: login,
       name: name ?? "-",
       email: email ?? "-",
@@ -52,6 +85,21 @@ class UserModel extends Equatable {
       followers: followers ?? 0,
       following: following ?? 0,
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'avatarUrl': avatarUrl,
+      'url': url,
+      'type': type,
+      'username': login,
+      'name': name,
+      'email': email,
+      'company': company,
+      'followers': followers,
+      'following': following,
+    };
   }
 
   @override

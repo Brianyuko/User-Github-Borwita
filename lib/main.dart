@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:user_github_borwita/presentation/blocs/detail_user/detail_user_bloc.dart';
+import 'package:user_github_borwita/presentation/blocs/favorite/favorite_bloc.dart';
+import 'package:user_github_borwita/presentation/blocs/favorite_status/favorite_status_bloc.dart';
 import 'package:user_github_borwita/presentation/blocs/search_user/search_user_bloc.dart';
 import 'package:user_github_borwita/presentation/pages/main_page.dart';
 import 'package:user_github_borwita/presentation/pages/user_detail_page.dart';
@@ -25,6 +27,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => di.locator<DetailUserBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<FavoriteBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<FavoriteStatusBloc>(),
         ),
       ],
       child: MaterialApp(

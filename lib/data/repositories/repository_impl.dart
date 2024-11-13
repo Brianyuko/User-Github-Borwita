@@ -2,13 +2,17 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:domain/domain.dart';
+import 'package:user_github_borwita/data/datasources/local_data_source.dart';
 import 'package:user_github_borwita/data/datasources/remote_data_source.dart';
+import 'package:user_github_borwita/data/models/user_model.dart';
 
 class RepositoryImpl implements Repository {
   final RemoteDataSource remoteDataSource;
+  final LocalDataSource localDataSource;
 
   RepositoryImpl({
     required this.remoteDataSource,
+    required this.localDataSource,
   });
 
   @override
@@ -39,5 +43,41 @@ class RepositoryImpl implements Repository {
     } on TlsException {
       return const Left(SSLFailure('Certificate verification failed'));
     }
+  }
+
+  @override
+  Future<Either<Failure, String>> saveFavorite(
+      {required UserEntity user}) async {
+    try {
+      final result = await localDataSource.insertFavorite(
+          user: UserModel.fromEntity(user));
+      return Right(result);
+    } on DatabaseException catch (e) {
+      return Left(DatabaseFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> removeFavorite(
+      {required UserEntity user}) async {
+    try {
+      final result = await localDataSource.removeFavorite(
+          user: UserModel.fromEntity(user));
+      return Right(result);
+    } on DatabaseException catch (e) {
+      return Left(DatabaseFailure(e.message));
+    }
+  }
+
+  @override
+  Future<bool> isAddedToFavorite({required int id}) async {
+    final result = await localDataSource.getFavoriteById(id: id);
+    return result != null;
+  }
+
+  @override
+  Future<Either<Failure, List<UserEntity>>> getFavorites() async {
+    final result = await localDataSource.getFavorites();
+    return Right(result.map((e) => e.toEntity()).toList());
   }
 }

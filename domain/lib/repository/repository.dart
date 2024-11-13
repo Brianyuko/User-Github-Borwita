@@ -8,4 +8,14 @@ abstract class Repository {
   Future<Either<Failure, UserEntity>> getDetailUser({
     required String username,
   });
+  Future<Either<Failure, String>> saveFavorite({
+    required UserEntity user,
+  });
+  Future<Either<Failure, String>> removeFavorite({
+    required UserEntity user,
+  });
+  Future<bool> isAddedToFavorite({
+    required int id,
+  });
+  Future<Either<Failure, List<UserEntity>>> getFavorites();
 }
