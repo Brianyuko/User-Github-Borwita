@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:user_github_borwita/presentation/blocs/detail_user/detail_user_bloc.dart';
 import 'package:user_github_borwita/presentation/blocs/search_user/search_user_bloc.dart';
 import 'package:user_github_borwita/presentation/pages/main_page.dart';
+import 'package:user_github_borwita/presentation/pages/user_detail_page.dart';
 import 'package:user_github_borwita/utils/injection.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,6 +23,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => di.locator<SearchUserBloc>(),
         ),
+        BlocProvider(
+          create: (_) => di.locator<DetailUserBloc>(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -31,6 +36,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: <String, WidgetBuilder>{
           '/': (BuildContext context) => const MainPage(),
+          '/user_detail': (BuildContext context) => const UserDetailPage(),
         },
       ),
     );
