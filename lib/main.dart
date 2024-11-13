@@ -1,8 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:user_github_borwita/presentation/blocs/search_user/search_user_bloc.dart';
 import 'package:user_github_borwita/presentation/pages/main_page.dart';
+import 'package:user_github_borwita/utils/injection.dart' as di;
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+void main() async {
+  di.init();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -11,16 +16,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: kReleaseMode ? false : true,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => di.locator<SearchUserBloc>(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: kReleaseMode ? false : true,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        routes: <String, WidgetBuilder>{
+          '/': (BuildContext context) => const MainPage(),
+        },
       ),
-      routes: <String, WidgetBuilder>{
-        '/': (BuildContext context) => const MainPage(),
-      },
     );
   }
 }
